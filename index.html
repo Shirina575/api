@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>JSON</h1>
+    <h2>JavaScript Object Notation</h2>
+    <ul id="user-container">
+
+    </ul>
+
+    <input id="title" type="text" placeholder="Title">
+    <br>
+    <input id="body-content" type="text" placeholder="Message">
+    <br>
+    <button id="submit">Submit</button>
+    <script>
+        // const user = {id: 245, name: 'Masud'};
+
+        // const userJSON = JSON.stringify(user); // this will convert the objet to an string in JSON format
+
+        // console.log(userJSON);
+
+        // const userFromJSON = JSON.parse(userJSON); // this will convert the JSON string to an object
+        // console.log(userFromJSON);
+
+        // Fetching data from server
+
+        fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => response.json())
+        .then(json => displayUser(json))
+        .catch(error => console.log(error));
+
+        // Posting data to server
+        document.getElementById('submit').addEventListener('click', function(){
+            const titleText = document.getElementById('title').value;
+            const bodyContent = document.getElementById('body-content').value;
+            const postInfo = {
+                title: titleText,
+                body: bodyContent
+            }
+            postToServer(postInfo);
+        })
+        function postToServer(postInfo){
+            fetch('https://jsonplaceholder.typicode.com/posts', {
+            method: 'POST',
+            body: JSON.stringify(postInfo),
+            headers: {
+                'Content-type': 'application/json; postInfocharset=UTF-8',
+            },
+            })
+            .then((response) => response.json())
+            .then((json) => console.log(json)).catch(error => console.log(error));
+        }
+
+        // Function for Fetching data
+        function displayUser(users){
+            const userNames = users.map(user => user.username);
+            const ul = document.getElementById('user-container');
+            for (let i = 0; i < userNames.length; i++) {
+                const element = userNames[i];
+                const li = document.createElement('li');
+                li.innerText = element;
+                ul.appendChild(li);
+            } 
+        }
+        
+    </script>
+</body>
+</html>
